@@ -6,6 +6,9 @@ export default defineEventHandler(async (event) => {
 	const workingFilePath = useRuntimeConfig().workingFilePath
 	const newData = await readBody(event)
 
+
+	console.log('newData')
+	console.log(newData)
 	
 
 	// const parsed = dataJsonArraySchema.safeParse(newData)

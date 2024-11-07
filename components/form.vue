@@ -1,27 +1,23 @@
 <script setup lang="ts">
-import { object, string, type InferType } from 'yup'
+import z from 'zod'
+//  import { object, string, type InferType } from 'yup'
 import type { FormSubmitEvent } from '#ui/types'
+import type { formSchema } from '~/types-zod';
 
 const data = useData()
 
-const schema = object({
-	cg_name: string().required('Required').min(3, 'min 3 characters').max(20, 'max 20 characters'),
-})
 
 const props = defineProps<{
-	parendId?: number
+	parentId?: number
 }>()
 
-type Schema = InferType<typeof schema>
+type Schema = z.infer<typeof formSchema>
 
 const state = reactive({
 	cg_name: undefined
 })
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-	// Do something with event.data
-	console.log(event.data)
-	console.log('props.parendId', props.parendId)
 	data.post({ ...event.data, parentId:props.parentId })
 }
 
@@ -31,7 +27,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 </script>
 
 <template>
-	<UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
+	<UForm :schema="formSchema" :state="state" class="space-y-4" @submit="onSubmit">
 		<UFormGroup label="cg_name" name="cg_name">
 			<UInput v-model="state.cg_name" />
 		</UFormGroup>

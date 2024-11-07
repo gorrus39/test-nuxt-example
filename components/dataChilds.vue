@@ -28,7 +28,7 @@ const showForm = (id: number) => {
 
 <template>
 	<UModal v-model="showFormRef">
-		<Form :parendId="parendId"/>
+		<Form :parentId="parendId"/>
 	</UModal>
 
 	<div class="pl-4">

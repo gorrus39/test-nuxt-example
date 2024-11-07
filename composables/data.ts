@@ -17,8 +17,8 @@ export const useData = () => {
 	}
 
 	async function post(data: PostData) {
-		const { error } = await useFetch('/api/data', { method: 'POST', body: data })
-		return {  error }
+		const response = await $fetch('/api/data', { method: 'POST', body: data })
+		return {  error: response }
 	}
 
 	return { get, post }
