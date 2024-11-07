@@ -1,5 +1,5 @@
 import { dataJsonArraySchema } from '~/types-zod'
-import type { DataJson } from '~/types-src'
+import type { DataJson, PostData } from '~/types-src'
 
 export const useData = () => {
 	const data = ref<null | DataJson[]>(null)
@@ -16,9 +16,9 @@ export const useData = () => {
 		return data.value
 	}
 
-	async function post(newData: DataJson[]) {
-		const { data: success } = await useFetch('/api/data', { method: 'POST', body: newData })
-		return { success }
+	async function post(data: PostData) {
+		const { error } = await useFetch('/api/data', { method: 'POST', body: data })
+		return {  error }
 	}
 
 	return { get, post }

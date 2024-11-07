@@ -97,10 +97,19 @@ type DataJson = z.infer<typeof baseDataJsonSchema> & {
 	childs?: DataJson[]
 }
 
+
+
 const dataJsonSchema: z.ZodType<DataJson> = baseDataJsonSchema.extend({
 	childs: z.lazy(() => dataJsonSchema.array()).optional(),
 })
 
 const dataJsonArraySchema = z.array(dataJsonSchema)
+
+export interface PostData {
+	parentId: number | undefined
+	cg_name: string
+}
+
+
 
 export { dataJsonArraySchema }

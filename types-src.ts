@@ -60,3 +60,8 @@ export interface DataJson {
 	path_to_top: number[]
 	childs?: DataJson[]
 }
+
+export interface PostData {
+	parentId: number | undefined
+	cg_name: string
+}

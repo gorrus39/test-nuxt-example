@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import type { DataJson } from '~/types-src'
-import FormEl from '~/components/form.vue'
+import Form from '~/components/form.vue'
 
 const showChilds = ref(true)
 const showFormRef = ref(false)
 
 const props = defineProps<{
 	childs: DataJson[]
+	parendId?: number
 }>()
 
 const locales = computed(() => {
@@ -27,7 +28,7 @@ const showForm = (id: number) => {
 
 <template>
 	<UModal v-model="showFormRef">
-		<FormEl />
+		<Form :parendId="parendId"/>
 	</UModal>
 
 	<div class="pl-4">
@@ -40,7 +41,7 @@ const showForm = (id: number) => {
 			<Transition>
 				<div v-if="child.childs && child.showChilds.value">
 					<UButton @click="showForm(child.id)" class="pl-10">Add item</UButton>
-					<DataChilds :childs="child.childs" />
+					<DataChilds :childs="child.childs" :parendId="child.id"/>
 				</div>
 			</Transition>
 		</div>
