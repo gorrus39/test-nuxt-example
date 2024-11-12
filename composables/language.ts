@@ -1,4 +1,4 @@
-import type { Lg } from '~/types-src'
+import type { Lg } from '~/types'
 
 export const useLanguage = () => {
 	const config = useRuntimeConfig()

@@ -1,27 +1,55 @@
 import fs from 'fs'
 import { readBody } from 'h3'
-import { dataJsonArraySchema } from '~/types-zod'
+import { formSchema, Node } from '~/types'
+import { getParentNodeById } from '~/utils/utils'
+
+const maxNodeIdInit = process.env.maxNodeIdInit
+let nodeId = maxNodeIdInit ? +maxNodeIdInit : 100
 
 export default defineEventHandler(async (event) => {
 	const workingFilePath = useRuntimeConfig().workingFilePath
-	const newData = await readBody(event)
+	const formData = await readBody(event)
 
+	const parsed = formSchema.safeParse(formData)
+	if (parsed.success) {
+		try {
+			const nodes = JSON.parse(fs.readFileSync(workingFilePath, 'utf-8'))
+			const parentId = formData.parentId as number | undefined
+			const id = ++nodeId
+			const cg_name = formData.cg_name
+			const locale = {
+				ru: {},
+				en: {
+					id,
+					cg_name
+				},
+				fr: {}
+			}
+			const newNode = {
+				id,
+				locale
+			}
 
-	console.log('newData')
-	console.log(newData)
-	
+			if (parentId == undefined) {
+				nodes.unshift(newNode)
+			} else {
 
-	// const parsed = dataJsonArraySchema.safeParse(newData)
-	// if (parsed.success) {
-	// 	try {
-	// 		fs.writeFileSync(workingFilePath, JSON.stringify(parsed.data), 'utf-8')
-	// 		return { success: true }
-	// 	} catch (error) {
-	// 		return { success: false }
-	// 	}
-	// } else {
-	// 	console.error('invalid fetched data type')
-	// 	console.log(parsed.error)
-	// 	return { success: false }
-	// }
+				
+				const parendNode = getParentNodeById(nodes, parentId)  
+				if (parendNode == undefined) {
+					throw Error('unexpected error')
+				} 
+				
+				parendNode.childs ? parendNode.childs.push(newNode) : parendNode.childs = [newNode]  
+				
+			}
+			
+			fs.writeFileSync(workingFilePath, JSON.stringify(nodes), 'utf-8')
+			return { success: true }
+		} catch (error) {
+			return { success: false }
+		}
+	} else {
+		return { success: false }
+	}
 })

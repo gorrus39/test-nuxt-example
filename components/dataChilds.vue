@@ -1,16 +1,18 @@
 <script setup lang="ts">
-import type { DataJson } from '~/types-src'
 import Form from '~/components/form.vue'
+import type { Node } from '~/types';
 
 const showChilds = ref(true)
 const showFormRef = ref(false)
 
 const props = defineProps<{
-	childs: DataJson[]
+	childs: Node[] | undefined
 	parendId?: number
 }>()
 
 const locales = computed(() => {
+	if (!props.childs) return []
+
 	return props.childs.map((child) => {
 		const locale = useLocale(child.locale)
 		return {
@@ -21,17 +23,18 @@ const locales = computed(() => {
 		}
 	})
 })
-const showForm = (id: number) => {
+const showForm = (id: number | undefined) => {
 	showFormRef.value = true
 }
 </script>
 
 <template>
 	<UModal v-model="showFormRef">
-		<Form :parentId="parendId"/>
+		<Form :parentId="parendId" />
 	</UModal>
 
 	<div class="pl-4">
+		<UButton @click="showForm(parendId)" class="pl-10">Add item</UButton>
 		<div v-for="child in locales" :key="child.id">
 			<UIcon
 				name="i-ep:arrow-down-bold"
@@ -39,9 +42,8 @@ const showForm = (id: number) => {
 				@click="child.showChilds.value = !child.showChilds.value" />
 			<b>{{ child.cg_name }}</b>
 			<Transition>
-				<div v-if="child.childs && child.showChilds.value">
-					<UButton @click="showForm(child.id)" class="pl-10">Add item</UButton>
-					<DataChilds :childs="child.childs" :parendId="child.id"/>
+				<div v-if="child.showChilds.value">
+					<DataChilds :childs="child?.childs" :parendId="child.id"/>
 				</div>
 			</Transition>
 		</div>

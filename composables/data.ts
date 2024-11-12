@@ -1,15 +1,15 @@
-import { dataJsonArraySchema } from '~/types-zod'
-import type { DataJson, PostData } from '~/types-src'
+import {  nodeSchema, type Node, type PostData } from '~/types'
+import z from 'zod'
 
 export const useData = () => {
-	const data = ref<null | DataJson[]>(null)
+	const data = ref<null | Node[]>(null)
 
 	async function get() {
 		const { data: dataJson } = await useFetch('/api/data')
 
-		const parsed = dataJsonArraySchema.safeParse(dataJson.value)
+		const parsed = z.array(nodeSchema).safeParse(dataJson.value)
 		if (parsed.success) {
-			data.value = parsed.data as DataJson[]
+			data.value = parsed.data as Node[]
 		} else {
 			console.error('invalid fetched data type')
 		}

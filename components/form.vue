@@ -2,14 +2,16 @@
 import z from 'zod'
 //  import { object, string, type InferType } from 'yup'
 import type { FormSubmitEvent } from '#ui/types'
-import type { formSchema } from '~/types-zod';
+import  { formSchema } from '~/types';
 
 const data = useData()
-
+const showNotify = ref(false)
 
 const props = defineProps<{
 	parentId?: number
+	// showFormRef: globalThis.Ref<boolean, boolean>
 }>()
+
 
 type Schema = z.infer<typeof formSchema>
 
@@ -18,12 +20,12 @@ const state = reactive({
 })
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-	data.post({ ...event.data, parentId:props.parentId })
+	const {error} = await data.post({ ...event.data, parentId: props.parentId })
+	// props.showFormRef.value = false
+	if (!error.success) {}
 }
 
-// console.log(state)
 
-// watch(state, (value)=>console.log('value', value))
 </script>
 
 <template>
@@ -33,4 +35,4 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 		</UFormGroup>
 		<UButton type="submit"> Submit </UButton>
 	</UForm>
-</template>
+	</template>
