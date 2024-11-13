@@ -21,29 +21,26 @@ export default defineEventHandler(async (event) => {
 				ru: {},
 				en: {
 					id,
-					cg_name
+					cg_name,
 				},
-				fr: {}
+				fr: {},
 			}
 			const newNode = {
 				id,
-				locale
+				locale,
 			}
 
 			if (parentId == undefined) {
 				nodes.unshift(newNode)
 			} else {
-
-				
-				const parendNode = getParentNodeById(nodes, parentId)  
+				const parendNode = getParentNodeById(nodes, parentId)
 				if (parendNode == undefined) {
 					throw Error('unexpected error')
-				} 
-				
-				parendNode.childs ? parendNode.childs.push(newNode) : parendNode.childs = [newNode]  
-				
+				}
+
+				parendNode.childs ? parendNode.childs.unshift(newNode) : (parendNode.childs = [newNode])
 			}
-			
+
 			fs.writeFileSync(workingFilePath, JSON.stringify(nodes), 'utf-8')
 			return { success: true }
 		} catch (error) {
