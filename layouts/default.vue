@@ -7,8 +7,8 @@ const languages = useLanguage().available
 
 <template>
 	<div>
-		<Form />
-		<USelect v-model="language" :options="languages" class="w-48" />
+		<!-- <Form /> -->
+		<!-- <USelect v-model="language" :options="languages" class="w-48" /> -->
 
 		<slot />
 	</div>

@@ -26,13 +26,54 @@ export default defineNuxtConfig({
 		client: true,
 	},
 	runtimeConfig: {
+		token: 'token asdf',
 		workingFilePath: `${__dirname}/data-file/${process.env.NODE_ENV}.json`,
 		public: {
 			availableLanguages: ['ru', 'en', 'fr'],
 			defaultLanguage: 'ru',
+			token: 'public token',
 		},
 	},
-	modules: ['@nuxt/test-utils/module', '@nuxt/ui', '@pinia/nuxt'],
+	modules: ['@nuxt/test-utils/module', '@nuxt/ui', '@pinia/nuxt', '@sidebase/nuxt-auth'],
+	// auth: {
+	// isEnabled: true,
+	// disableServerSideAuth: false,
+	// originEnvKey: 'AUTH_ORIGIN',
+	// baseURL: '/api/auth',
+	// baseURL: 'http://localhost:3000/api/auth',
+	// provider: {
+	// 	type: 'local',
+	// 	endpoints: {
+	// 		signIn: { path: '/login', method: 'post' },
+	// 		signOut: { path: '/logout', method: 'post' },
+	// 		signUp: { path: '/register', method: 'post' },
+	// 		getSession: { path: '/session', method: 'get' },
+	// 	},
+	// 	token: {
+	// 		signInResponseTokenPointer: '/token',
+	// 		type: 'Bearer',
+	// 		cookieName: 'auth.token',
+	// 		headerName: 'Authorization',
+	// 		maxAgeInSeconds: 1800,
+	// 		sameSiteAttribute: 'lax',
+	// 		cookieDomain: 'sidebase.io',
+	// 		secureCookieAttribute: false,
+	// 		httpOnlyCookieAttribute: false,
+	// 	},
+	// },
+	// sessionRefresh: {
+	//   enablePeriodically: true,
+	//   enableOnWindowFocus: true,
+	// }
+	// },
+	auth: {
+		provider: {
+			type: 'authjs',
+			trustHost: false,
+			defaultProvider: 'github',
+			addDefaultCallbackUrl: true,
+		},
+	},
 	postcss: {
 		plugins: {
 			tailwindcss: {},
